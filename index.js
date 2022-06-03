@@ -9,6 +9,26 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(cors());
+const verifyJWT = (req, res, next) => {
+  const auth = req.headers.authorization;
+  const userEmail = req.query.email;
+  if (!auth) {
+    return res.status(401).send({ message: "Unauthorized Access" });
+  }
+  const token = auth.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
+    const decodedEmail = decoded.email;
+    if (decodedEmail === userEmail) {
+      req.email = decodedEmail;
+      next();
+    } else {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
+  });
+};
 
 // MongoDB
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.zbkdy.mongodb.net/?retryWrites=true&w=majority`;
