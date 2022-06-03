@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,6 +23,23 @@ async function run() {
   try {
     await client.connect();
     const userCollection = client.db("delibhai").collection("users");
+
+    // Update User and generate a JWT Token
+    app.put("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const userInfo = req.body;
+      const updateDoc = {
+        $set: userInfo,
+      };
+      const options = { upsert: true };
+
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "3d",
+      });
+      res.send({ result, token });
+    });
   } finally {
     // await client.close();
   }
