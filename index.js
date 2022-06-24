@@ -1,8 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -13,19 +13,19 @@ const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
   if (!auth) {
-    return res.status(401).send({ message: "Unauthorized Access" });
+    return res.status(401).send({ message: 'Unauthorized Access' });
   }
-  const token = auth.split(" ")[1];
+  const token = auth.split(' ')[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(403).send({ message: "Forbidden Access" });
+      return res.status(403).send({ message: 'Forbidden Access' });
     }
     const decodedEmail = decoded.email;
     if (decodedEmail === userEmail) {
       req.email = decodedEmail;
       next();
     } else {
-      return res.status(403).send({ message: "Forbidden Access" });
+      return res.status(403).send({ message: 'Forbidden Access' });
     }
   });
 };
@@ -42,10 +42,11 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const userCollection = client.db("delibhai").collection("users");
+    const userCollection = client.db('delibhai').collection('users');
+    const itemCollection = client.db('delifood').collection('items');
 
     // Update User and generate a JWT Token
-    app.put("/user/:email", async (req, res) => {
+    app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
       const filter = { email: email };
       const userInfo = req.body;
@@ -56,9 +57,16 @@ async function run() {
 
       const result = await userCollection.updateOne(filter, updateDoc, options);
       const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "3d",
+        expiresIn: '3d',
       });
       res.send({ result, token });
+    });
+
+    // Get Items
+    app.get('/item', async (req, res) => {
+      const query = {};
+      const result = await itemCollection.find(query).toArray();
+      res.send(result);
     });
   } finally {
     // await client.close();
@@ -68,5 +76,5 @@ run().catch(console.dir);
 
 // Port Listening
 app.listen(port, () => {
-  console.log("deliBhai server is running...");
+  console.log('deliBhai server is running...');
 });
