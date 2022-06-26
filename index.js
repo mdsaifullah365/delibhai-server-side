@@ -63,14 +63,24 @@ async function run() {
     });
 
     // Get Items
-    app.get('/item', async (req, res) => {
-      const query = {};
-      const result = await itemCollection.find(query).toArray();
+    app.get('/services/delifood', async (req, res) => {
+      const result = await itemCollection.find({ available: true }).toArray();
+      res.send(result);
+    });
+    // Get Items
+    app.get('/services/delifood/:category', async (req, res) => {
+      const category = req.params.category;
+      if (!category) {
+        const result = await itemCollection.find({ available: true }).toArray();
+        return res.send(result);
+      }
+      const cursor = await itemCollection.find({}).toArray();
+      const result = cursor.filter((c) => c.categories.includes(category));
       res.send(result);
     });
 
     // Get Item Details
-    app.get('/item/:id', async (req, res) => {
+    app.get('/services/delifood/item/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await itemCollection.findOne(query);
