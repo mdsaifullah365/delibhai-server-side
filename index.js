@@ -68,6 +68,14 @@ async function run() {
       const result = await itemCollection.find(query).toArray();
       res.send(result);
     });
+
+    // Get Item Details
+    app.get('/item/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await itemCollection.findOne(query);
+      res.send(result);
+    });
   } finally {
     // await client.close();
   }
