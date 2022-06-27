@@ -102,6 +102,12 @@ async function run() {
       const result = await itemCollection.insertOne(item);
       res.send(result);
     });
+
+    // Get Available Items
+    app.get('/services/delifood/all', async (req, res) => {
+      const result = await itemCollection.find().toArray();
+      res.send(result);
+    });
   } finally {
     // await client.close();
   }
