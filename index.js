@@ -104,7 +104,8 @@ async function run() {
     });
 
     // Get Available Items
-    app.get('/services/delifood/all', async (req, res) => {
+    app.get('/admin/delifood', async (req, res) => {
+      console.log('triggered');
       const result = await itemCollection.find().toArray();
       res.send(result);
     });
