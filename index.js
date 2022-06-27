@@ -6,9 +6,14 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const corsOptions = {
+  origin: '*',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
@@ -44,6 +49,7 @@ async function run() {
     await client.connect();
     const userCollection = client.db('delibhai').collection('users');
     const itemCollection = client.db('delifood').collection('items');
+    const categoryCollection = client.db('delifood').collection('categories');
 
     // Update User and generate a JWT Token
     app.put('/user/:email', async (req, res) => {
@@ -62,12 +68,19 @@ async function run() {
       res.send({ result, token });
     });
 
-    // Get Items
+    // Get Categories
+    app.get('/services/delifood/category', async (req, res) => {
+      const result = await categoryCollection.find({}).toArray();
+      res.send(result);
+    });
+
+    // Get Available Items
     app.get('/services/delifood', async (req, res) => {
       const result = await itemCollection.find({ available: true }).toArray();
       res.send(result);
     });
-    // Get Items
+
+    // Get Category wise  Items
     app.get('/services/delifood/:category', async (req, res) => {
       const category = req.params.category;
       if (!category) {
@@ -84,6 +97,13 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await itemCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Post Item
+    app.post('/services/delifood', async (req, res) => {
+      const item = req.body;
+      const result = await itemCollection.insertOne(item);
       res.send(result);
     });
   } finally {
