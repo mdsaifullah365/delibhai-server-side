@@ -105,8 +105,14 @@ async function run() {
 
     // Get Available Items
     app.get('/admin/delifood', async (req, res) => {
-      console.log('triggered');
       const result = await itemCollection.find().toArray();
+      res.send(result);
+    });
+
+    // Remove Item
+    app.delete('/admin/delifood/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await itemCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     });
   } finally {
