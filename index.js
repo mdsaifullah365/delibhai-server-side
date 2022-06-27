@@ -69,7 +69,7 @@ async function run() {
     });
 
     // Get Categories
-    app.get('/services/delifood/category', async (req, res) => {
+    app.get('/delifood/category', async (req, res) => {
       const result = await categoryCollection.find({}).toArray();
       res.send(result);
     });
