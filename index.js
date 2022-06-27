@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: '*',
-  credentials: true, //access-control-allow-credentials:true
+  credentials: true,
   optionSuccessStatus: 200,
 };
 // Middleware
@@ -83,12 +83,8 @@ async function run() {
     // Get Category wise  Items
     app.get('/services/delifood/:category', async (req, res) => {
       const category = req.params.category;
-      if (!category) {
-        const result = await itemCollection.find({ available: true }).toArray();
-        return res.send(result);
-      }
       const cursor = await itemCollection.find({}).toArray();
-      const result = cursor.filter((c) => c.categories.includes(category));
+      const result = cursor.filter((c) => c.categories?.includes(category));
       res.send(result);
     });
 
