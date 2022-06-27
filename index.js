@@ -115,6 +115,22 @@ async function run() {
       const result = await itemCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     });
+
+    // Change Availability
+    app.put('/admin/delifood/:id', async (req, res) => {
+      const id = req.params.id;
+      const item = await itemCollection.findOne({ _id: ObjectId(id) });
+      const updateDoc = {
+        $set: {
+          available: !item?.available,
+        },
+      };
+      const result = await itemCollection.updateOne(
+        { _id: ObjectId(id) },
+        updateDoc
+      );
+      res.send(result);
+    });
   } finally {
     // await client.close();
   }
