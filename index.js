@@ -76,14 +76,17 @@ async function run() {
 
     // Get Available Items
     app.get('/services/delifood', async (req, res) => {
-      const result = await itemCollection.find({ available: true }).toArray();
+      const result = await itemCollection
+        .find({ available: true })
+        .toArray()
+        .reverse();
       res.send(result);
     });
 
     // Get Category wise  Items
     app.get('/services/delifood/:category', async (req, res) => {
       const category = req.params.category;
-      const cursor = await itemCollection.find({}).toArray();
+      const cursor = await itemCollection.find({}).toArray().reverse();
       const result = cursor.filter((c) => c.categories?.includes(category));
       res.send(result);
     });
@@ -105,7 +108,7 @@ async function run() {
 
     // Get Available Items
     app.get('/admin/delifood', async (req, res) => {
-      const result = await itemCollection.find().toArray();
+      const result = await itemCollection.find().toArray().reverse();
       res.send(result);
     });
 
