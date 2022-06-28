@@ -15,8 +15,6 @@ app.use(cors(corsOptions));
 const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
-  console.log(auth);
-  console.log(userEmail);
   if (!auth) {
     return res.status(401).send({ message: 'Unauthorized Access' });
   }
@@ -80,7 +78,7 @@ async function run() {
     });
 
     // Generate a JWT Token for admin
-    app.get('/admin/:email', async (req, res) => {
+    app.get('/user/:email', async (req, res) => {
       const email = req.params.email;
       const filter = { email: email };
       const user = await userCollection.findOne(filter);
@@ -137,7 +135,6 @@ async function run() {
     // Get All Items
     app.get('/admin/delifood', async (req, res) => {
       const result = await itemCollection.find().toArray();
-      console.log(result);
       res.send(result);
     });
 
