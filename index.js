@@ -95,7 +95,7 @@ async function run() {
     });
 
     // isAdmin
-    app.get('/isAdmin', verifyToken, verifyAdmin, (req, res) => {
+    app.get('/isAdmin', verifyJWT, verifyAdmin, (req, res) => {
       res.status(200).send({ admin: true });
     });
 
