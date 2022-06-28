@@ -15,6 +15,8 @@ app.use(cors(corsOptions));
 const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
+  console.log(auth);
+  console.log(userEmail);
   if (!auth) {
     return res.status(401).send({ message: 'Unauthorized Access' });
   }
@@ -132,9 +134,10 @@ async function run() {
       res.send(result);
     });
 
-    // Get Available Items
+    // Get All Items
     app.get('/admin/delifood', async (req, res) => {
       const result = await itemCollection.find().toArray();
+      console.log(result);
       res.send(result);
     });
 
