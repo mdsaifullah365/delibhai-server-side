@@ -104,13 +104,13 @@ async function run() {
     });
 
     // Get Available Items
-    app.get('/services/delifood', async (req, res) => {
+    app.get('/projects/delifood', async (req, res) => {
       const result = await itemCollection.find({ available: true }).toArray();
       res.send(result);
     });
 
     // Get Category wise  Items
-    app.get('/services/delifood/:category', async (req, res) => {
+    app.get('/projects/delifood/:category', async (req, res) => {
       const category = req.params.category;
       const cursor = await itemCollection.find({}).toArray();
       const result = cursor.filter((c) => c.categories?.includes(category));
@@ -118,7 +118,7 @@ async function run() {
     });
 
     // Get Item Details
-    app.get('/services/delifood/item/:id', async (req, res) => {
+    app.get('/projects/delifood/item/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await itemCollection.findOne(query);
@@ -126,7 +126,7 @@ async function run() {
     });
 
     // Post Item
-    app.post('/services/delifood', async (req, res) => {
+    app.post('/projects/delifood', async (req, res) => {
       const item = req.body;
       const result = await itemCollection.insertOne(item);
       res.send(result);
