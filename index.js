@@ -8,8 +8,6 @@ const port = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: '*',
-  credentials: true,
-  optionSuccessStatus: 200,
 };
 // Middleware
 app.use(express.json());
@@ -84,11 +82,11 @@ async function run() {
       const email = req.params.email;
       const filter = { email: email };
       const user = await userCollection.findOne(filter);
-      if (user.role === 'admin') {
-        const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
+      if (user?.role === 'admin') {
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn: '1d',
         });
-        return res.send({ result, token });
+        return res.send({ token });
       } else {
         return res.status(403).send({ message: 'Forbidden Access' });
       }
