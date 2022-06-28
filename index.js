@@ -68,6 +68,21 @@ async function run() {
       res.send({ result, token });
     });
 
+    // Generate a JWT Token for admin
+    app.get('/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const user = await userCollection.findOne(filter);
+      if (user.role === 'admin') {
+        const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: '1d',
+        });
+        return res.send({ result, token });
+      } else {
+        return res.status(403).send({ message: 'Forbidden Access' });
+      }
+    });
+
     // Get Categories
     app.get('/delifood/category', async (req, res) => {
       const result = await categoryCollection.find({}).toArray();
