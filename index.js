@@ -51,6 +51,17 @@ async function run() {
     const itemCollection = client.db('delifood').collection('items');
     const categoryCollection = client.db('delifood').collection('categories');
 
+    const verifyAdmin = async (req, res, next) => {
+      const decodedEmail = req.email;
+      const query = { email: decodedEmail };
+      const user = await userCollection.findOne(query);
+      if (user.role === 'admin') {
+        next();
+      } else {
+        return res.status(403).send({ message: 'Forbidden Access' });
+      }
+    };
+
     // Update User and generate a JWT Token
     app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
@@ -81,6 +92,11 @@ async function run() {
       } else {
         return res.status(403).send({ message: 'Forbidden Access' });
       }
+    });
+
+    // isAdmin
+    app.get('/isAdmin', verifyToken, verifyAdmin, (req, res) => {
+      res.status(200).send({ admin: true });
     });
 
     // Get Categories
