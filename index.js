@@ -133,7 +133,7 @@ async function run() {
     });
 
     // Get All Items
-    app.get('/admin/delifood', async (req, res) => {
+    app.get('/admin/delifood', verifyJWT, verifyAdmin, async (req, res) => {
       const result = await itemCollection.find().toArray();
       res.send(result);
     });
