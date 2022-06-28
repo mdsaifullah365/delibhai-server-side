@@ -139,14 +139,19 @@ async function run() {
     });
 
     // Remove Item
-    app.delete('/admin/delifood/:id', async (req, res) => {
-      const id = req.params.id;
-      const result = await itemCollection.deleteOne({ _id: ObjectId(id) });
-      res.send(result);
-    });
+    app.delete(
+      '/admin/delifood/:id',
+      verifyJWT,
+      verifyAdmin,
+      async (req, res) => {
+        const id = req.params.id;
+        const result = await itemCollection.deleteOne({ _id: ObjectId(id) });
+        res.send(result);
+      }
+    );
 
     // Change Availability
-    app.put('/admin/delifood/:id', async (req, res) => {
+    app.put('/admin/delifood/:id', verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const item = await itemCollection.findOne({ _id: ObjectId(id) });
       const updateDoc = {
