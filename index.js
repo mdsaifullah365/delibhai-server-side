@@ -104,13 +104,13 @@ async function run() {
     });
 
     // Get Available Items
-    app.get('/projects/delifood', async (req, res) => {
+    app.get('/projects/delifood/menu', async (req, res) => {
       const result = await itemCollection.find({ available: true }).toArray();
       res.send(result);
     });
 
     // Get Category wise  Items
-    app.get('/projects/delifood/:category', async (req, res) => {
+    app.get('/projects/delifood/menu/:category', async (req, res) => {
       const category = req.params.category;
       const cursor = await itemCollection.find({}).toArray();
       const result = cursor.filter((c) => c.categories?.includes(category));
