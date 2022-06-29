@@ -102,6 +102,11 @@ async function run() {
       const result = await categoryCollection.find({}).toArray();
       res.send(result);
     });
+    // POST Categories
+    app.post('/delifood/category', async (req, res) => {
+      const result = await categoryCollection.insertOne();
+      res.send(result);
+    });
 
     // Get Available Items
     app.get('/projects/delifood/menu', async (req, res) => {
