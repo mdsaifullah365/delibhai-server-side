@@ -104,7 +104,8 @@ async function run() {
     });
     // POST Categories
     app.post('/delifood/category', async (req, res) => {
-      const result = await categoryCollection.insertOne();
+      const category = req.body;
+      const result = await categoryCollection.insertOne(category);
       res.send(result);
     });
 
