@@ -6,12 +6,9 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: 'https://www.delibhai.com',
-};
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
