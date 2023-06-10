@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: 'https://www.delibhai.com',
+  origin: 'https://www.delibhai.com', // the origin
 };
 // Middleware
 app.use(express.json());
