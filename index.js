@@ -6,7 +6,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-console.log(process.env.PORT);
 // Middleware
 app.use(express.json());
 app.use(cors());
@@ -180,5 +179,5 @@ run().catch(console.dir);
 
 // Port Listening
 app.listen(port, () => {
-  console.log('deliBhai server is running...');
+  console.log(`deliBhai server is running on port ${port}`);
 });
