@@ -6,12 +6,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: 'https://www.delibhai.com', // the origin
-};
+console.log(process.env.PORT);
+
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 const verifyJWT = (req, res, next) => {
   const auth = req.headers.authorization;
   const userEmail = req.query.email;
@@ -35,6 +34,9 @@ const verifyJWT = (req, res, next) => {
 
 // MongoDB
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.zbkdy.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri2 =
+  'mongodb+srv://delibhai:<password>@cluster0.zbkdy.mongodb.net/?retryWrites=true&w=majority';
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
